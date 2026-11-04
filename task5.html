@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shannon Entropy - Task 5</title>
+    
+    <style>
+        /* --- СИНИЙ ДИЗАЙН --- */
+        body {
+            background-color: #e6f0fa; /* Нежно-голубой фон */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Фоновые круги */
+        .bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            background-color: #cce0ff;
+            opacity: 0.5;
+            z-index: -1;
+        }
+        .bg-c1 { width: 300px; height: 300px; top: 10%; left: 5%; }
+        .bg-c2 { width: 200px; height: 200px; bottom: 5%; right: 10%; }
+        .bg-c3 { width: 100px; height: 100px; top: 30%; right: 25%; }
+
+        h1 {
+            color: #1a365d;
+            font-size: 42px;
+            margin-bottom: 10px;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        /* Формула */
+        .formula {
+            font-size: 24px;
+            color: #1a365d;
+            font-weight: bold;
+            margin-bottom: 30px;
+            background: white;
+            padding: 10px 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(150, 180, 255, 0.2);
+        }
+
+        .calc-card {
+            background-color: white;
+            border-radius: 30px;
+            box-shadow: 0 15px 35px rgba(150, 180, 255, 0.4);
+            padding: 40px 50px;
+            text-align: center;
+            margin-bottom: 30px;
+            width: 600px;
+        }
+
+        .instruction {
+            font-size: 18px;
+            color: #1a365d;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .inputs-row {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        /* Поля ввода */
+        input[type="number"] {
+            width: 90px;
+            padding: 12px;
+            border: 2px solid #cce0ff;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 18px;
+            color: #1a365d;
+            outline: none;
+        }
+        input[type="number"]:focus { border-color: #4a7ab5; }
+        
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* Кнопка Calculate */
+        .calc-btn {
+            background-color: #cce0ff;
+            color: #1a365d;
+            border: none;
+            padding: 12px 40px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 20px;
+            cursor: pointer;
+            width: 100%;
+            max-width: 300px;
+            margin: 0 auto;
+            transition: background-color 0.3s;
+        }
+        .calc-btn:hover { background-color: #a3c4ff; }
+
+        /* Блок для вывода результата */
+        .result {
+            margin-top: 20px;
+            font-size: 24px;
+            color: #1a365d;
+            font-weight: bold;
+            display: none;
+            background-color: #f5f9ff;
+            padding: 15px;
+            border-radius: 15px;
+        }
+
+        /* Кнопки навигации */
+        .buttons-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .number-btn {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 50px;
+            height: 50px;
+            background-color: #cce0ff;
+            color: #1a365d;
+            font-size: 20px;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 12px;
+            transition: background-color 0.3s;
+        }
+        .number-btn:hover { background-color: #a3c4ff; }
+
+        .action-buttons { display: flex; gap: 20px; }
+        .main-btn {
+            display: block;
+            padding: 15px 50px;
+            background-color: #1a365d;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            font-size: 20px;
+            font-weight: bold;
+            border-radius: 15px;
+            transition: background-color 0.3s;
+        }
+        .btn-home { background-color: #7a9cc6; }
+        .main-btn:hover { background-color: #2b4c7e; }
+    </style>
+</head>
+<body>
+
+    <!-- Фоновые круги -->
+    <div class="bg-circle bg-c1"></div>
+    <div class="bg-circle bg-c2"></div>
+    <div class="bg-circle bg-c3"></div>
+
+    <h1>Shannon Entropy</h1>
+    
+    <!-- Визуализация формулы -->
+    <div class="formula">
+        H(X) = - &sum; p(i) &middot; log<sub>2</sub> p(i)
+    </div>
+
+    <div class="calc-card">
+        <div class="instruction">Enter probabilities (%)</div>
+        
+        <div class="inputs-row">
+            <!-- Поля для ввода процентов (по умолчанию как на картинке) -->
+            <input type="number" id="p1" placeholder="P(1)" value="50">
+            <input type="number" id="p2" placeholder="P(2)" value="25">
+            <input type="number" id="p3" placeholder="P(3)" value="12.5">
+            <input type="number" id="p4" placeholder="P(4)" value="12.5">
+        </div>
+        
+        <button class="calc-btn" onclick="calculateEntropy()">H(X) =</button>
+
+        <div class="result" id="result"></div>
+    </div>
+
+    <!-- Кнопки навигации -->
+    <div class="buttons-container">
+        <a href="index.html" class="number-btn">0</a>
+        <a href="task1.html" class="number-btn">1</a>
+        <a href="task2.html" class="number-btn">2</a>
+        <a href="task3.html" class="number-btn">3</a>
+        <a href="task4.html" class="number-btn">4</a>
+        <a href="task5.html" class="number-btn">5</a>
+        <a href="task6.html" class="number-btn">6</a>
+        <a href="task7.html" class="number-btn">7</a>
+    </div>
+
+    <div class="action-buttons">
+        <a href="../index.html" class="main-btn btn-home">Home</a>
+        <a href="../handouts.html" class="main-btn">Handouts</a>
+    </div>
+
+    <script>
+        function calculateEntropy() {
+            // Получаем значения из полей (в процентах)
+            let p1 = parseFloat(document.getElementById('p1').value) || 0;
+            let p2 = parseFloat(document.getElementById('p2').value) || 0;
+            let p3 = parseFloat(document.getElementById('p3').value) || 0;
+            let p4 = parseFloat(document.getElementById('p4').value) || 0;
+            
+            let resultDiv = document.getElementById('result');
+
+            // Переводим проценты в доли (например, 50% -> 0.5)
+            let probs = [p1/100, p2/100, p3/100, p4/100];
+
+            // Проверяем, что сумма вероятностей равна 1 (100%)
+            // (допускаем небольшую погрешность из-за дробей)
+            let sum = probs.reduce((a, b) => a + b, 0);
+            if (Math.abs(sum - 1) > 0.01) {
+                resultDiv.innerHTML = "<span style='color:red;'>Ошибка: Сумма вероятностей должна быть 100%!</span>";
+                resultDiv.style.display = 'block';
+                return;
+            }
+
+            // Считаем энтропию по формуле Шеннона: H = - sum(p * log2(p))
+            let entropy = 0;
+            for (let i = 0; i < probs.length; i++) {
+                let p = probs[i];
+                if (p > 0) {
+                    // Math.log2 — это логарифм по основанию 2
+                    entropy -= p * Math.log2(p);
+                }
+            }
+
+            // Выводим результат, округляя до 4 знаков после запятой
+            resultDiv.innerHTML = `H(X) = <span style="color:#2b4c7e; font-size: 32px;">${entropy.toFixed(4)}</span> bit`;
+            resultDiv.style.display = 'block';
+        }
+    </script>
+</body>
+</html>

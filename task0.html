@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C# Code - Task 0</title>
+    <style>
+        /* Базовые стили - синий фон */
+        body {
+            background-color: #e6f0fa; /* Нежно-голубой фон */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Декоративные круги на фоне (как на оригинале, но синие) */
+        .circle-1, .circle-2 {
+            position: absolute;
+            border-radius: 50%;
+            background-color: #cce0ff; /* Светло-синий */
+            opacity: 0.6;
+            z-index: -1;
+        }
+        .circle-1 {
+            width: 150px;
+            height: 150px;
+            top: 10%;
+            left: 10%;
+        }
+        .circle-2 {
+            width: 250px;
+            height: 250px;
+            bottom: 10%;
+            right: 10%;
+        }
+
+        /* Заголовок страницы */
+        h1 {
+            color: #1a365d; /* Темно-синий */
+            font-size: 48px;
+            margin-bottom: 30px;
+            font-weight: 700;
+        }
+
+        /* Белая карточка с кодом */
+        .code-card {
+            background-color: white;
+            border-radius: 30px;
+            box-shadow: 0 15px 35px rgba(150, 180, 255, 0.4); /* Синеватая тень */
+            padding: 40px;
+            width: 80%;
+            max-width: 800px;
+            margin-bottom: 30px;
+        }
+
+        /* Стили для самого кода */
+        pre {
+            margin: 0;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 16px;
+            line-height: 1.5;
+            color: #1a365d; /* Темно-синий текст кода */
+            white-space: pre-wrap; /* Чтобы длинные строки переносились */
+        }
+
+        /* Блок с кнопками */
+        .buttons-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        /* Кнопки с цифрами */
+        .number-btn {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 50px;
+            height: 50px;
+            background-color: #cce0ff; /* Светло-синий */
+            color: #1a365d; /* Темно-синий текст */
+            font-size: 20px;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 12px;
+            transition: background-color 0.3s;
+        }
+
+        .number-btn:hover {
+            background-color: #a3c4ff;
+        }
+
+        /* Большие кнопки Home и Handouts */
+        .action-buttons {
+            display: flex;
+            gap: 20px;
+        }
+
+        .main-btn {
+            display: block;
+            padding: 15px 50px;
+            background-color: #1a365d; /* Темно-синий */
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            font-size: 20px;
+            font-weight: bold;
+            border-radius: 15px;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .main-btn:hover {
+            background-color: #2b4c7e;
+            transform: scale(1.02);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Декоративные круги -->
+    <div class="circle-1"></div>
+    <div class="circle-2"></div>
+
+    <!-- Заголовок -->
+    <h1>C# Code</h1>
+
+    <!-- Карточка с кодом -->
+    <div class="code-card">
+        <pre>
+using System;
+
+class ABBA
+{
+    static int Factorial(int n)
+    {
+        if (n == 1) return 1;
+        return n * Factorial(n - 1);
+    }
+
+    static void Main(string[] args)
+    {
+        Console.WriteLine("ABBA!");
+        Console.Write("Enter number of vowels: ");
+        int vowels = int.Parse(Console.ReadLine());
+
+        Console.Write("Enter number of consonants: ");
+        int consonants = int.Parse(Console.ReadLine());
+
+        Console.WriteLine(Factorial(vowels) * Factorial(consonants));
+    }
+}</pre>
+    </div>
+
+    <!-- Кнопки навигации (как на скриншоте) -->
+    <div class="buttons-container">
+        <a href="task0.html" class="number-btn">0</a>
+        <a href="task1.html" class="number-btn">1</a>
+        <a href="task2.html" class="number-btn">2</a>
+        <a href="task3.html" class="number-btn">3</a>
+        <a href="task4.html" class="number-btn">4</a>
+        <a href="task5.html" class="number-btn">5</a>
+        <a href="task6.html" class="number-btn">6</a>
+    </div>
+
+    <div class="action-buttons">
+        <!-- Ссылка на главную страницу (портфолио) -->
+        <a href="index.html" class="main-btn" style="background-color: #7a9cc6;">Home</a>
+        <!-- Ссылка на страницу Handouts -->
+        <a href="../handouts.html" class="main-btn">Handouts</a>
+    </div>
+
+</body>
+</html>

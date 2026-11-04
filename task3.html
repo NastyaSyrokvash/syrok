@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hamming Code - Task 3 (Diagram)</title>
+    
+    <style>
+        /* --- СИНИЙ ДИЗАЙН --- */
+        body {
+            background-color: #e6f0fa; /* Нежно-голубой фон */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Декоративные круги на фоне */
+        .bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            background-color: #cce0ff;
+            opacity: 0.4;
+            z-index: -1;
+        }
+        .bg-c1 { width: 250px; height: 250px; top: 10%; left: 5%; }
+        .bg-c2 { width: 300px; height: 300px; bottom: -5%; right: 5%; }
+
+        h1 {
+            color: #1a365d;
+            font-size: 42px;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .calc-card {
+            background-color: white;
+            border-radius: 30px;
+            box-shadow: 0 15px 35px rgba(150, 180, 255, 0.4);
+            padding: 30px 40px;
+            text-align: center;
+            margin-bottom: 20px;
+            width: 600px;
+        }
+
+        .input-group {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        input[type="text"] {
+            width: 150px;
+            padding: 10px;
+            border: 2px solid #cce0ff;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 18px;
+            color: #1a365d;
+            outline: none;
+        }
+        input[type="text"]:focus { border-color: #4a7ab5; }
+
+        .calc-btn {
+            background-color: #cce0ff;
+            color: #1a365d;
+            border: none;
+            padding: 10px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .calc-btn:hover { background-color: #a3c4ff; }
+
+        /* --- СХЕМА ВЕННА --- */
+        .venn-container {
+            position: relative;
+            width: 400px;
+            height: 350px;
+            margin: 20px auto;
+            display: none; /* Скрыто до нажатия кнопки */
+        }
+
+        /* Три пересекающихся круга */
+        .venn-circle {
+            position: absolute;
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            border: 2px solid #333;
+            opacity: 0.4; /* Прозрачность, чтобы видеть пересечения */
+        }
+
+        /* Зеленый круг (сверху) */
+        .vc-green {
+            background-color: #a8d5ba;
+            top: 0;
+            left: 90px;
+        }
+        /* Синий круг (слева) */
+        .vc-blue {
+            background-color: #a8c0d5;
+            top: 100px;
+            left: 20px;
+        }
+        /* Красный круг (справа) */
+        .vc-red {
+            background-color: #d5a8a8;
+            top: 100px;
+            left: 160px;
+        }
+
+        /* Белые квадратики для цифр */
+        .num-box {
+            position: absolute;
+            width: 40px;
+            height: 30px;
+            background-color: white;
+            border: 1px solid #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 18px;
+            color: #000;
+            z-index: 10;
+            /* Тень для объема */
+            box-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+        }
+
+        /* Позиции квадратиков (подогнаны под диаграмму) */
+        .pos-1 { top: 40px; left: 180px; } /* Середина Зеленого */
+        .pos-2 { top: 140px; left: 90px; } /* Середина Синего */
+        .pos-3 { top: 140px; left: 260px; } /* Середина Красного */
+        
+        .pos-int-12 { top: 110px; left: 140px; } /* Зеленый + Синий */
+        .pos-int-13 { top: 110px; left: 220px; } /* Зеленый + Красный */
+        .pos-int-23 { top: 190px; left: 180px; } /* Синий + Красный */
+        
+        .pos-center { top: 160px; left: 180px; } /* Центр (все три) */
+
+        /* Подписи под кругами */
+        .venn-label {
+            position: absolute;
+            font-size: 14px;
+            color: #1a365d;
+            font-weight: bold;
+            text-align: center;
+            width: 100px;
+        }
+        .lbl-1 { top: 230px; left: 150px; } /* Бит 1 */
+        .lbl-2 { top: 200px; left: 10px; }  /* Бит 2 */
+        .lbl-4 { top: 200px; left: 290px; } /* Бит 4 */
+
+        /* Результат */
+        .result-text {
+            font-size: 22px;
+            color: #1a365d;
+            font-weight: bold;
+            margin-top: 10px;
+            display: none;
+        }
+
+        /* Навигация */
+        .buttons-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .number-btn {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 50px;
+            height: 50px;
+            background-color: #cce0ff;
+            color: #1a365d;
+            font-size: 20px;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 12px;
+            transition: background-color 0.3s;
+        }
+        .number-btn:hover { background-color: #a3c4ff; }
+
+        .action-buttons { display: flex; gap: 20px; }
+        .main-btn {
+            display: block;
+            padding: 15px 50px;
+            background-color: #1a365d;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            font-size: 20px;
+            font-weight: bold;
+            border-radius: 15px;
+            transition: background-color 0.3s;
+        }
+        .btn-home { background-color: #7a9cc6; }
+        .main-btn:hover { background-color: #2b4c7e; }
+    </style>
+</head>
+<body>
+
+    <!-- Декоративные фоновые круги -->
+    <div class="bg-circle bg-c1"></div>
+    <div class="bg-circle bg-c2"></div>
+
+    <h1>Hamming Code</h1>
+
+    <div class="calc-card">
+        <div class="input-group">
+            <input type="text" id="dataInput" placeholder="Например: 1011" maxlength="4" value="1011">
+            <button class="calc-btn" onclick="drawVenn()">Calculate</button>
+        </div>
+
+        <!-- Схема Венна -->
+        <div class="venn-container" id="venn-diagram">
+            <!-- Круги -->
+            <div class="venn-circle vc-green"></div>
+            <div class="venn-circle vc-blue"></div>
+            <div class="venn-circle vc-red"></div>
+
+            <!-- Квадратики с цифрами -->
+            <!-- Контрольные биты (пока пустые, заполнятся скриптом) -->
+            <div class="num-box pos-1" id="box-1"></div>
+            <div class="num-box pos-2" id="box-2"></div>
+            <div class="num-box pos-3" id="box-4"></div>
+            
+            <!-- Биты данных -->
+            <div class="num-box pos-int-12" id="box-3">1</div>
+            <div class="num-box pos-int-13" id="box-5">1</div>
+            <div class="num-box pos-int-23" id="box-6">1</div>
+            
+            <!-- Центр -->
+            <div class="num-box pos-center" id="box-7">1</div>
+
+            <!-- Подписи -->
+            <div class="venn-label lbl-1">Позиция 1</div>
+            <div class="venn-label lbl-2">Позиция 2</div>
+            <div class="venn-label lbl-4">Позиция 4</div>
+        </div>
+
+        <div class="result-text" id="result-text"></div>
+    </div>
+
+    <!-- Навигация -->
+    <div class="buttons-container">
+        <a href="index.html" class="number-btn">0</a>
+        <a href="task1.html" class="number-btn">1</a>
+        <a href="task2.html" class="number-btn">2</a>
+        <a href="task3.html" class="number-btn">3</a>
+        <a href="task4.html" class="number-btn">4</a>
+        <a href="task5.html" class="number-btn">5</a>
+        <a href="task6.html" class="number-btn">6</a>
+        <a href="task7.html" class="number-btn">7</a>
+    </div>
+
+    <div class="action-buttons">
+        <a href="../index.html" class="main-btn btn-home">Home</a>
+        <a href="../handouts.html" class="main-btn">Handouts</a>
+    </div>
+
+    <script>
+        function drawVenn() {
+            let input = document.getElementById('dataInput').value.trim();
+            
+            if (input.length !== 4 || !/^[01]+$/.test(input)) {
+                alert("Пожалуйста, введите ровно 4 бита (0 или 1). Например: 1011");
+                return;
+            }
+
+            let bits = input.split('').map(Number); // [1, 0, 1, 1]
+            
+            // Позиции битов данных:
+            // d1 -> поз 3 (пересечение Зеленого и Синего)
+            // d2 -> поз 5 (пересечение Зеленого и Красного)
+            // d3 -> поз 6 (пересечение Синего и Красного)
+            // d4 -> поз 7 (центр)
+            
+            let d1 = bits[0];
+            let d2 = bits[1];
+            let d3 = bits[2];
+            let d4 = bits[3];
+
+            // Заполняем биты данных в квадратики
+            document.getElementById('box-3').textContent = d1;
+            document.getElementById('box-5').textContent = d2;
+            document.getElementById('box-6').textContent = d3;
+            document.getElementById('box-7').textContent = d4;
+
+            // Считаем контрольные биты (четность)
+            // p1 (Зеленый, поз 1) = d1 ^ d2 ^ d4 (позиции 3, 5, 7)
+            let p1 = (d1 + d2 + d4) % 2;
+
+            // p2 (Синий, поз 2) = d1 ^ d3 ^ d4 (позиции 3, 6, 7)
+            let p2 = (d1 + d3 + d4) % 2;
+
+            // p4 (Красный, поз 4) = d2 ^ d3 ^ d4 (позиции 5, 6, 7)
+            let p4 = (d2 + d3 + d4) % 2;
+
+            // Выводим контрольные биты
+            document.getElementById('box-1').textContent = p1;
+            document.getElementById('box-2').textContent = p2;
+            document.getElementById('box-4').textContent = p4;
+
+            // Показываем схему
+            document.getElementById('venn-diagram').style.display = 'block';
+
+            // Собираем итоговый код
+            // Позиции: 1(p1), 2(p2), 3(d1), 4(p4), 5(d2), 6(d3), 7(d4)
+            let finalCode = `${p1}${p2}${d1}${p4}${d2}${d3}${d4}`;
+            
+            let resultDiv = document.getElementById('result-text');
+            resultDiv.textContent = "Готовый код: " + finalCode;
+            resultDiv.style.display = 'block';
+        }
+        
+        // Запускаем отрисовку при загрузке страницы (чтобы сразу было видно)
+        window.onload = drawVenn;
+    </script>
+</body>
+</html>
